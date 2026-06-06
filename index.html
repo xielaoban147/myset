@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>协老板的动画小站</title>
+  <style>
+    :root {
+      --bg-1: #08111f;
+      --bg-2: #13233d;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f7f3ea;
+      --muted: #b6c2d0;
+      --accent: #ffb347;
+      --accent-2: #79d7ff;
+      --panel: rgba(9, 18, 33, 0.62);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(121, 215, 255, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 20%, rgba(255, 179, 71, 0.22), transparent 24%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+      overflow-x: hidden;
+    }
+
+    .stars,
+    .stars::before,
+    .stars::after {
+      position: fixed;
+      inset: 0;
+      content: "";
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 70% 40%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.55) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 85% 70%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.5px);
+      background-size: 240px 240px;
+      animation: drift 24s linear infinite;
+      pointer-events: none;
+    }
+
+    .stars::before {
+      opacity: 0.55;
+      transform: scale(1.1);
+      animation-duration: 34s;
+    }
+
+    .stars::after {
+      opacity: 0.35;
+      transform: scale(1.25);
+      animation-duration: 46s;
+    }
+
+    main {
+      position: relative;
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 72px 0 48px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+    }
+
+    .intro {
+      padding: 34px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--accent);
+      font-size: 14px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(38px, 7vw, 74px);
+      line-height: 0.95;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: #09111f;
+      background: linear-gradient(135deg, var(--accent), #ffd36a);
+      font-weight: 700;
+    }
+
+    .btn.ghost {
+      color: var(--text);
+      background: transparent;
+      border: 1px solid var(--line);
+    }
+
+    .stage {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .orbital {
+      position: relative;
+      width: 320px;
+      aspect-ratio: 1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .ring,
+    .ring::before,
+    .ring::after {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(121, 215, 255, 0.25);
+      content: "";
+    }
+
+    .ring {
+      animation: spin 16s linear infinite;
+    }
+
+    .ring::before {
+      inset: 24px;
+      border-color: rgba(255, 179, 71, 0.35);
+      animation: spin-reverse 10s linear infinite;
+    }
+
+    .ring::after {
+      inset: 54px;
+      border-style: dashed;
+      border-color: rgba(255, 255, 255, 0.24);
+      animation: spin 12s linear infinite;
+    }
+
+    .planet {
+      position: absolute;
+      inset: 72px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, #fff1c6 0 9%, transparent 10%),
+        radial-gradient(circle at 45% 38%, #ffb347 0 19%, #ff8e42 42%, #12233f 100%);
+      box-shadow:
+        0 0 0 16px rgba(255, 179, 71, 0.08),
+        0 18px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .planet::before,
+    .planet::after {
+      position: absolute;
+      content: "";
+      border-radius: 50%;
+    }
+
+    .planet::before {
+      inset: -16px 28px;
+      border: 7px solid rgba(121, 215, 255, 0.6);
+      transform: rotate(18deg);
+    }
+
+    .planet::after {
+      width: 18px;
+      height: 18px;
+      top: 26px;
+      right: 34px;
+      background: #fff8dc;
+      box-shadow:
+        -26px 124px 0 -2px rgba(255, 248, 220, 0.7),
+        -112px 82px 0 1px rgba(255, 248, 220, 0.5),
+        18px 146px 0 0 rgba(255, 248, 220, 0.55);
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    footer {
+      margin-top: 26px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-reverse {
+      to { transform: rotate(-360deg); }
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes twinkle {
+      50% { opacity: 0.55; transform: scale(0.9); }
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0); }
+      to { transform: translateY(-240px); }
+    }
+
+    @media (max-width: 860px) {
+      main {
+        padding-top: 32px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .stage {
+        min-height: 320px;
+      }
+
+      .orbital {
+        width: min(280px, 82vw);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <main>
+    <section class="hero">
+      <div class="panel intro">
+        <span class="tag">XIE LAOBAN STUDIO</span>
+        <h1>协老板的<br>动画小站</h1>
+        <p>
+          这里会慢慢放上我的网页动画、练习作品和有意思的小实验。
+          现在这是第一版首页，后面我会继续把更多内容补进来。
+        </p>
+        <div class="actions">
+          <a class="btn" href="#works">看看作品</a>
+          <a class="btn ghost" href="mailto:hello@example.com">联系我</a>
+        </div>
+      </div>
+      <div class="panel stage">
+        <div class="orbital">
+          <div class="ring"></div>
+          <div class="planet"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="works" class="grid">
+      <article class="panel card">
+        <strong>动画展示</strong>
+        <p>后面可以把你做的网页动画、AE 导出片段或互动效果放到这里。</p>
+      </article>
+      <article class="panel card">
+        <strong>资源下载</strong>
+        <p>如果你想分享源文件、压缩包或预览视频，这里也可以放下载入口。</p>
+      </article>
+      <article class="panel card">
+        <strong>持续更新</strong>
+        <p>这个页面是纯静态页面，后面你只要替换文件，就能继续更新网站内容。</p>
+      </article>
+    </section>
+
+    <footer>© 2026 xielaoban1108.xyz</footer>
+  </main>
+</body>
+</html>
