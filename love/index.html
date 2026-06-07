@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#030712" />
+    <title>For You</title>
+    <link rel="stylesheet" href="css/site.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <video
+        id="confessionVideo"
+        class="film"
+        src="video/confession_loop.mp4"
+        playsinline
+        webkit-playsinline
+        muted
+        loop
+        preload="auto"
+      ></video>
+
+      <section class="start-card" id="startCard">
+        <div class="halo"></div>
+        <p class="eyebrow">A quiet little universe</p>
+        <h1>点一下，开始播放</h1>
+        <p class="sub">手机浏览器打开后，点击即可进入全屏动画。</p>
+        <button id="startButton" type="button">开始观看</button>
+      </section>
+
+    </main>
+
+    <script>
+      const video = document.getElementById("confessionVideo");
+      const startCard = document.getElementById("startCard");
+      const startButton = document.getElementById("startButton");
+
+      async function startExperience() {
+        startButton.disabled = true;
+        startButton.textContent = "正在进入...";
+        try {
+          video.muted = true;
+          await video.play();
+          startCard.classList.add("hidden");
+        } catch (error) {
+          startButton.disabled = false;
+          startButton.textContent = "再次点击播放";
+          console.warn("Playback needs another tap:", error);
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          video.pause();
+        } else if (startCard.classList.contains("hidden")) {
+          video.play().catch(() => {});
+        }
+      });
+
+      startButton.addEventListener("click", startExperience);
+    </script>
+  </body>
+</html>
